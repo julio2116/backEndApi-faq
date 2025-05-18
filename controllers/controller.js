@@ -1,11 +1,9 @@
-const fs = require("fs").promises;
 const path = require('path');
 const dirPath = path.join(__dirname, '..', 'db', 'fqa.json');
+const {readNewFile, writeNewFile} = require('../utils/ReadNWriteFiles.js')
 
 const getAll = async (req, res) => {
-  const dataRead = await fs.readFile(dirPath, "utf-8");
-  const data = JSON.parse(dataRead);
-
+  const data = await readNewFile(dirPath)
   res.status(200).json({
     status: "OK",
     data,
@@ -13,11 +11,10 @@ const getAll = async (req, res) => {
 };
 
 const newItem = async (req, res) => {
-  const dataRead = await fs.readFile(dirPath, "utf-8");
-  const prevData = JSON.parse(dataRead);
-  const newDB = [...prevData, { ...req.body }];
+  const data = await readNewFile(dirPath)
+  const newData = [...prevData, { ...req.body }];
 
-  fs.writeFile(dirPath, JSON.stringify(newDB, null, 2), "utf-8");
+  writeNewFile(dirPath, newData)
   res.status(201).json({
     status: "Ok",
     data: newItem,
@@ -25,8 +22,7 @@ const newItem = async (req, res) => {
 };
 
 const getOne = async (req, res) => {
-  const dataRead = await fs.readFile(dirPath, "utf-8");
-  const data = JSON.parse(dataRead);
+  const data = await readNewFile(dirPath)
 
   const id = req.params.id;
   const element = data.find((el) => el.id == id);
@@ -45,8 +41,7 @@ const getOne = async (req, res) => {
 };
 
 const deleteItem = async (req, res) => {
-  const dataRead = await fs.readFile(dirPath, "utf-8");
-  const data = JSON.parse(dataRead);
+  const data = await readNewFile(dirPath)
 
   const id = req.params.id;
   const newData = data.filter((el) => el.id != id);
@@ -58,15 +53,14 @@ const deleteItem = async (req, res) => {
     });
   }
 
-  fs.writeFile(dirPath, JSON.stringify(newData, null, 2), "utf-8");
+  writeNewFile(dirPath, newData)
   res.status(200).json({
     status: "Ok",
   });
 };
 
 const alterItem = async (req, res) => {
-  const dataRead = await fs.readFile(dirPath, "utf-8");
-  const data = JSON.parse(dataRead);
+  const data = await readNewFile(dirPath)
   const id = req.params.id;
 
   const element = data.find((el) => el.id == id);
@@ -82,7 +76,7 @@ const alterItem = async (req, res) => {
     el.id == id ? Object.assign(el, req.body) : el
   );
 
-  fs.writeFile(dirPath, JSON.stringify(newData, null, 2), "utf-8");
+  writeNewFile(dirPath, newData)
   res.status(200).json({
     status: "Ok",
   });
