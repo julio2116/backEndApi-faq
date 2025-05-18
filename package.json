@@ -1,0 +1,14 @@
+{
+  "name": "mysecapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "server": "node server/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
