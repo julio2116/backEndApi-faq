@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const {getAll, getOne, deleteItem, alterItem, newItem} = require('../controllers/controller.js');
-const {validateKeys, createId} = require('../middlewares/middlewares.js')
+const {validateValues, validateKeys, createId, verifyMethod} = require('../middlewares/middlewares.js')
 
-router.route("/").get(getAll).post(validateKeys, createId, newItem);
-router.route("/:id").get(getOne).delete(deleteItem).patch(alterItem);
+router.route("/").all(verifyMethod).get(getAll).post(validateValues, validateKeys, createId, newItem);
+router.route("/:id").all(verifyMethod).get(getOne).delete(deleteItem).patch(alterItem);
 
 module.exports = router

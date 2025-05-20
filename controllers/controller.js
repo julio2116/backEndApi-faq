@@ -12,12 +12,12 @@ const getAll = async (req, res) => {
 
 const newItem = async (req, res) => {
   const data = await readNewFile(dirPath)
-  const newData = [...prevData, { ...req.body }];
+  const newData = [...data, { ...req.body }];
 
-  writeNewFile(dirPath, newData)
+  await writeNewFile(dirPath, newData)
   res.status(201).json({
     status: "Ok",
-    data: newItem,
+    data: req.body,
   });
 };
 
@@ -53,7 +53,7 @@ const deleteItem = async (req, res) => {
     });
   }
 
-  writeNewFile(dirPath, newData)
+  await writeNewFile(dirPath, newData)
   res.status(200).json({
     status: "Ok",
   });
@@ -76,9 +76,10 @@ const alterItem = async (req, res) => {
     el.id == id ? Object.assign(el, req.body) : el
   );
 
-  writeNewFile(dirPath, newData)
+  await writeNewFile(dirPath, newData)
   res.status(200).json({
     status: "Ok",
+    data: req.body
   });
 };
 
